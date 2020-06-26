@@ -14,3 +14,15 @@ campo.on("input", function(){
     var qtdCaracteres = conteudo.length;
     $("#contador-caracteres").text(qtdCaracteres);
 });
+
+var tempoRestante = $("#tempo-digitacao").text();
+campo.one("focus", function(){ //focus é pra quando clicar ou pra quando dar o tab no item, o one só vale para o primeiro focus
+    var cronometroId = setInterval(function(){
+        tempoRestante--;
+        $("#tempo-digitacao").text(tempoRestante);
+        if(tempoRestante < 1){
+            campo.attr("disabled", true);
+            clearInterval(cronometroId);
+        }
+    }, 1000);
+});
