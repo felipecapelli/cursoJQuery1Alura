@@ -7,6 +7,7 @@ $(function(){
     inicializaContadores();
     inicializaCronometro();
     $("#botao-reiniciar").click(reiniciaJogo);
+    inicializaMarcadores();
 });
 
 function atualizaTamanhoFrase(){
@@ -27,6 +28,32 @@ function inicializaContadores(){
     });
 }
 
+function inicializaMarcadores(){
+    var frase = $(".frase").text();
+    campo.on("input", function(){
+        var digitado = campo.val();
+        var comparavel = frase.substr(0, digitado.length);
+    
+        if (digitado == comparavel) {
+            campo.addClass("borda-verde");
+            campo.removeClass("borda-vermelha")
+        }else{
+            campo.addClass("borda-vermelha");
+            campo.removeClass("borda-verde");
+        }
+        /*
+            //------------Esse mesmo código poderia ser feito comm ES6
+            if( frase.startsWith(digitado)) {
+                campo.addClass("borda-verde");
+            } else {
+                campo.addClass("borda-vermelha");
+            }
+
+        */
+    });
+}
+
+
 function inicializaCronometro(){
     var tempoRestante = $("#tempo-digitacao").text();
     campo.one("focus", function(){ //focus é pra quando clicar ou pra quando dar o tab no item, o one só vale para o primeiro focus
@@ -39,6 +66,11 @@ function inicializaCronometro(){
                 campo.attr("disabled", true);
                 clearInterval(cronometroId);
                 $("#botao-reiniciar").removeAttr("disabled");
+                //campo.css("background-color", "lightgray"); //Para adicionar uma propriedade css a um elemento
+                //var cor = campo.css("background-color"); //Se fizer assim da pra recuperar o valor da propriedade css
+                //var valores = campo.css(["background-color","width"]); //Da tbm pra recuperar varios valores e acessar como um objeto: (exemplo) valores.width
+                //campo.addClass("campo-desativado"); //adiciona uma classe a tag
+                campo.toggleClass("campo-desativado"); //se não tiver a class, coloca, mas se tiver a classe, tira
             }
         }, 1000);
     });
@@ -51,4 +83,8 @@ function reiniciaJogo(){
     $("#contador-caracteres").text("0");
     $("#tempo-digitacao").text(tempoInicial);
     inicializaCronometro();
+    //campo.removeClass("campo-desativado"); //retira a classe da tag
+    campo.toggleClass("campo-desativado"); //se não tiver a class, coloca, mas se tiver a classe, tira
+    campo.removeClass("borda-vermelha");
+    campo.removeClass("borda-verde");
 }
