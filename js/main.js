@@ -2,7 +2,7 @@ var tempoInicial = $("#tempo-digitacao").text();
 var campo = $(".campo-digitacao");
 
 //$(document).ready(function(){ //funciona igual a linha baixo
-$(function(){
+$(function () {
     atualizaTamanhoFrase();
     inicializaContadores();
     inicializaCronometro();
@@ -10,34 +10,34 @@ $(function(){
     inicializaMarcadores();
 });
 
-function atualizaTamanhoFrase(){
+function atualizaTamanhoFrase() {
     var frase = $(".frase").text();
     var numPalavras = frase.split(" ").length;
     var tamanhoFrase = $("#tamanho-frase");
     tamanhoFrase.text(numPalavras);
 }
 
-function inicializaContadores(){
-    campo.on("input", function(){
+function inicializaContadores() {
+    campo.on("input", function () {
         var conteudo = campo.val();
         var qtdPalavras = conteudo.split(/\S+/).length - 1;
         $("#contador-palavras").text(qtdPalavras);
-    
+
         var qtdCaracteres = conteudo.length;
         $("#contador-caracteres").text(qtdCaracteres);
     });
 }
 
-function inicializaMarcadores(){
+function inicializaMarcadores() {
     var frase = $(".frase").text();
-    campo.on("input", function(){
+    campo.on("input", function () {
         var digitado = campo.val();
         var comparavel = frase.substr(0, digitado.length);
-    
+
         if (digitado == comparavel) {
             campo.addClass("borda-verde");
             campo.removeClass("borda-vermelha")
-        }else{
+        } else {
             campo.addClass("borda-vermelha");
             campo.removeClass("borda-verde");
         }
@@ -54,29 +54,34 @@ function inicializaMarcadores(){
 }
 
 
-function inicializaCronometro(){
+function inicializaCronometro() {
     var tempoRestante = $("#tempo-digitacao").text();
-    campo.one("focus", function(){ //focus é pra quando clicar ou pra quando dar o tab no item, o one só vale para o primeiro focus
+    campo.one("focus", function () { //focus é pra quando clicar ou pra quando dar o tab no item, o one só vale para o primeiro focus
         $("#botao-reiniciar").attr("disabled", true);
-        var cronometroId = setInterval(function(){
+        var cronometroId = setInterval(function () {
             tempoRestante--;
             $("#tempo-digitacao").text(tempoRestante);
-            if(tempoRestante < 1){
-                //campo.removeAttr("disabled");//funciona igual a linha baixo
-                campo.attr("disabled", true);
+            if (tempoRestante < 1) {
                 clearInterval(cronometroId);
-                $("#botao-reiniciar").removeAttr("disabled");
-                //campo.css("background-color", "lightgray"); //Para adicionar uma propriedade css a um elemento
-                //var cor = campo.css("background-color"); //Se fizer assim da pra recuperar o valor da propriedade css
-                //var valores = campo.css(["background-color","width"]); //Da tbm pra recuperar varios valores e acessar como um objeto: (exemplo) valores.width
-                //campo.addClass("campo-desativado"); //adiciona uma classe a tag
-                campo.toggleClass("campo-desativado"); //se não tiver a class, coloca, mas se tiver a classe, tira
+                finalizaJogo();
             }
         }, 1000);
     });
 }
 
-function reiniciaJogo(){
+function finalizaJogo() {
+    //campo.removeAttr("disabled");//funciona igual a linha baixo
+    campo.attr("disabled", true);
+    $("#botao-reiniciar").removeAttr("disabled");
+    //campo.css("background-color", "lightgray"); //Para adicionar uma propriedade css a um elemento
+    //var cor = campo.css("background-color"); //Se fizer assim da pra recuperar o valor da propriedade css
+    //var valores = campo.css(["background-color","width"]); //Da tbm pra recuperar varios valores e acessar como um objeto: (exemplo) valores.width
+    //campo.addClass("campo-desativado"); //adiciona uma classe a tag
+    campo.toggleClass("campo-desativado"); //se não tiver a class, coloca, mas se tiver a classe, tira
+    inserePlacar();
+}
+
+function reiniciaJogo() {
     campo.attr("disabled", false);
     campo.val("");
     $("#contador-palavras").text("0");
